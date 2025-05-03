@@ -1,0 +1,9 @@
+{
+  "cmake.sourceDirectory": "${workspaceFolder}",
+  "cmake.buildDirectory": "${workspaceFolder}/../../build/ex618_guile_004_02_vsc",
+  "cmake.generator": "MinGW Makefiles",
+  "cmake.cmakePath": "C:/Program Files/CMake/bin/cmake.exe",
+  "cmake.configureEnvironment": {
+    "PATH": "${env:PATH};C:/Qt6_9/Tools/mingw1310_64/bin;C:/Qt6_9/6.9.0/mingw_64/bin"
+  }
+}

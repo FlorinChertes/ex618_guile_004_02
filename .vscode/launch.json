@@ -1,0 +1,55 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug guile_app_04_02_01",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/../../build/ex618_guile_004_02_vsc/guile_app_04_02_01.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [
+        {"name": "PATH", "value": "${env:PATH};C:/Qt6_9/6.9.0/mingw_64/bin"}
+      ],
+      "MIMode": "gdb",
+      "miDebuggerPath": "C:/Qt6_9/Tools/mingw1310_64/bin/gdb.exe"
+    }
+  ]
+  
+  
+   [
+    {
+      "name": "Debug guile_app_04_02_02",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/../../build/ex618_guile_004_02_vsc/guile_app_04_02_02.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [
+        {"name": "PATH", "value": "${env:PATH};C:/Qt6_9/6.9.0/mingw_64/bin"}
+      ],
+      "MIMode": "gdb",
+      "miDebuggerPath": "C:/Qt6_9/Tools/mingw1310_64/bin/gdb.exe"
+    }
+  ]
+  
+   [
+    {
+      "name": "Debug guile_app_04_02_04",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/../../build/ex618_guile_004_02_vsc/guile_app_04_02_04.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [
+        {"name": "PATH", "value": "${env:PATH};C:/Qt6_9/6.9.0/mingw_64/bin"}
+      ],
+      "MIMode": "gdb",
+      "miDebuggerPath": "C:/Qt6_9/Tools/mingw1310_64/bin/gdb.exe"
+    }
+  ]
+  
+}
