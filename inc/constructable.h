@@ -1,26 +1,31 @@
+#pragma
+
 #include "evaluater.h"
 #include "caller.h"
 
 #include <QDebug>
-#include <QObject>
 #include <QString>
+
 #include <QJSValue>
 #include <QJSEngine>
 
+#if defined(__clang__ ) || defined(__GNUC__)
+    static const QString startSig{"T = "};
+    static const QString endSig{"]"};
+#elif defined (_MSC_VER)
+    static const QString startSig{"Constructable<class "};
+    static const QString endSig{">::create"};
+#endif
+
 template<typename T>
-struct Constructable {
+concept FromQObjectInheritedAndHasFuncCreate = requires(T t, QJSValueList args) {
+    std::is_base_of_v<QObject, T>;
+    { t.create(args) } -> std::same_as<QJSValue>;
+};
 
-    static_assert(std::is_base_of_v<QObject, T>, "T must be derived from QObject");
-
-    #if defined(__clang__ ) || defined(__GNUC__)
-        inline static const QString startSig{"T = "};
-        inline static const QString endSig{"]"};        
-    #elif defined (_MSC_VER)
-        inline static const QString startSig{"Constructable<class "}; 
-        inline static const QString endSig{">::create"};    
-    #endif
-
-    void create(QJSEngine& engine, T* obj) {
+template<FromQObjectInheritedAndHasFuncCreate T>
+void expose_factory_to_engine(QJSEngine& engine, T* obj)
+{
 
 #if defined(__clang__ ) || defined(__GNUC__)
     QString fungSig = __PRETTY_FUNCTION__;
@@ -30,28 +35,25 @@ struct Constructable {
      QString fungSig = typeid(T).name(); // Fallback for other compilers     
 #endif
 
-        int start = fungSig.indexOf(startSig) + startSig.length();
-        int end = fungSig.indexOf(endSig, start);
-        
-        const QString propertyName = fungSig.mid(start, end - start);
-        qDebug() << "property name:" << propertyName;
+    const int start = fungSig.indexOf(startSig) + startSig.length();
+    const int end = fungSig.indexOf(endSig, start);
 
-        QString className{propertyName};
-        className.replace("Factory", "");
-        qDebug() << "class name:" << className;
-       
-        QJSValue myMetaClass = engine.newQObject(obj);
-        engine.globalObject().setProperty(propertyName, myMetaClass);
-        qDebug() << "create function:" << propertyName << "class name:" << className;
+    const QString exposed_obj_name = fungSig.mid(start, end - start);
+    qDebug() << "exposed object name:" << exposed_obj_name;
 
-        QString jsWraperScript = QString(
-            R"~(
-            function %2(...args) { return %1.create(args); }
-            )~"
-        ).arg(propertyName).arg(className);
+    QString exposed_name{exposed_obj_name};
+    exposed_name.replace("Factory", "");
+    qDebug() << "exposed name:" << exposed_name;
 
-        Evaluater evaluater{};
-        Caller caller{};
-        QJSValue result = caller(evaluater(engine, jsWraperScript), engine.globalObject());
-    }   
-};
+    QJSValue exposed_obj = engine.newQObject(obj);
+    engine.globalObject().setProperty(exposed_obj_name, exposed_obj);
+
+
+    QString jsWraperScript = QString(
+        R"~(
+        function %2(...args) { return %1.create(args); }
+        )~"
+    ).arg(exposed_obj_name).arg(exposed_name);
+
+    QJSValue result = caller(evaluater(engine, jsWraperScript), engine.globalObject());
+}

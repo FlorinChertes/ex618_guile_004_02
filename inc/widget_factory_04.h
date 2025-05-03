@@ -1,5 +1,7 @@
 #pragma once
 
+#include "date_time.h"
+
 #include <QVBoxLayout>
 #include <QPushButton>
 
@@ -42,6 +44,7 @@ class Widget_factory : public QObject
 
 	QList<QWidget*> widgets;
 	QJSEngine engine;
+	MyDateTimeFactory my_date_time_factory_;
 
 	void createButton(const QString& text);
 

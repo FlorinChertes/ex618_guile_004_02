@@ -4,6 +4,10 @@ cmake_minimum_required(VERSION 3.18 FATAL_ERROR)
 # project name and language
 project (ex618_guile_004_02_prj  LANGUAGES CXX)
 
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 set(INCLUDE_LOCAL_DIRS "test/inc" "lib/inc" "inc")
 
 SET(INCLUDE_DIRS "C:/Qt6_9/6.9.0/mingw_64/include/QtWidgets")

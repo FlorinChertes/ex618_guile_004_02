@@ -5,5 +5,9 @@
   "cmake.cmakePath": "C:/Program Files/CMake/bin/cmake.exe",
   "cmake.configureEnvironment": {
     "PATH": "${env:PATH};C:/Qt6_9/Tools/mingw1310_64/bin;C:/Qt6_9/6.9.0/mingw_64/bin"
+  },
+  "files.associations": {
+    "concepts": "cpp",
+    "qjsengine": "cpp"
   }
 }

@@ -1,13 +1,11 @@
 #include "widget_factory_04.h"
 
-#include "date_time.h"
-
 #include "console_logger.h"
 
 #include "evaluater.h"
 #include "caller.h"
-#include "constructable.h"
 
+#include "constructable.h"
 
 #include <QMessageBox>
 
@@ -38,7 +36,9 @@ Widget_factory::Widget_factory(QObject* parent)
 	: QObject(parent)
 	, widgets {}
 	, engine {}
-{}
+	, my_date_time_factory_{engine}
+{
+}
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -92,39 +92,9 @@ void Widget_factory::setup_engine()
 //-----------------------------------------------------------------------------
 void Widget_factory::setup_date_time()
 {
-	Evaluater evaluater;
-	Caller caller;
-
-	qDebug() << "\n*** setup_date_time ***";
-	MyDateTimeFactory myDateTimeFactory{engine};
-
-	qDebug() << "instatiate Constructable with MyDateTime";
-	Constructable<MyDateTimeFactory> ctrDateTime{};
-	qDebug() << "call create on Constructable with MyDateTimeFactory";
-	ctrDateTime.create(engine, &myDateTimeFactory);
-
-	qDebug() << "evaluate script with MyDateTime";
-	const QString script{ R"~(
-	
-		var js_obj_01 = new MyDateTime(2023, 10, 1);
-		console.log("myDateTime(2023, 10, 1).toString(): " + js_obj_01.toString());
-	
-		var js_obj_02 = new MyDateTime();
-		js_obj_02.now()
-		console.log("now(): " + js_obj_02.toString());
-
-		var js_obj_03 = new MyDateTime(2023, 5, 15, 12, 30, 45);
-		console.log("myDateTime(2023, 5, 15, 12, 30, 45).toString(): " + js_obj_03.toString());
-
-		var js_obj_04 = MyDateTime(2023, 5, 16, 13, 31, 46);
-		console.log("myDateTime(2023, 5, 16, 13, 31, 46).toString(): " + js_obj_04.toString());
-
-		js_obj_03;
-
-	)~" };
-	QJSValue result = evaluater(engine, script);
-	
-	qDebug() << "End of setup date time, result of script:" << result.toString();
+	qDebug() << "\n*** expose the MyDateTime Factory to the engine ***";
+	expose_factory_to_engine(engine, &my_date_time_factory_);
+	qDebug() << "\n*** End of setup date time ***";
 }
 
 //-----------------------------------------------------------------------------
@@ -216,6 +186,28 @@ void Widget_factory::onButtonClickted_that()
 		qDebug() << "Result named function is: " << result.toString();
 	}
 
+	{
+		qDebug() << "evaluate script with MyDateTime";
+		const QString script{ R"~(
+
+			var js_obj_01 = new MyDateTime(2023, 10, 1);
+			console.log("myDateTime(2023, 10, 1).toString(): " + js_obj_01.toString());
+
+			var js_obj_02 = new MyDateTime();
+			js_obj_02.now()
+			console.log("now(): " + js_obj_02.toString());
+
+			var js_obj_03 = new MyDateTime(2023, 5, 15, 12, 30, 45);
+			console.log("myDateTime(2023, 5, 15, 12, 30, 45).toString(): " + js_obj_03.toString());
+
+			var js_obj_04 = MyDateTime(2023, 5, 16, 13, 31, 46);
+			console.log("myDateTime(2023, 5, 16, 13, 31, 46).toString(): " + js_obj_04.toString());
+
+			console.log("myDateTime(2023, 10, 1).toString(): " + js_obj_01.toString());
+
+		)~" };
+		QJSValue result = evaluater(engine, script);
+	}
 }
 
 //-----------------------------------------------------------------------------
